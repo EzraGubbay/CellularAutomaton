@@ -45,6 +45,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
 
 from LogicManager import LogicManager
+import SpecialConfigurations
 
 FONT_PATH = "Fonts/Montserrat-Medium.ttf"
 
@@ -194,8 +195,8 @@ class GameScreen(Screen):
 class WindowManager(ScreenManager):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.dimension = 100 # Original is 100
-        self.logic = LogicManager(dimension=self.dimension, wraparound=False)
+        self.dimension = 6 # Original is 100
+        self.logic = LogicManager(dimension=self.dimension, wraparound=False, config=SpecialConfigurations.blinkers["blinker4"])
         gs = GameScreen(dimension=self.dimension, logic=self.logic)
         self.add_widget(gs)
 
