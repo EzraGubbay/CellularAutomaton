@@ -84,7 +84,7 @@ class LogicManager:
             self.main_matrix[i][j].set_state(1 if self.main_matrix[i][j].get_state() == 0 else 0)
             self.main_matrix[i][j + 1].set_state(1 if self.main_matrix[i][j + 1].get_state() == 0 else 0)
             self.main_matrix[i + 1][j].set_state(1 if self.main_matrix[i + 1][j].get_state() == 0 else 0)
-            self.main_matrix[i + 1][j + 1].set_state(1 if self.main_matrix[i][j + 1].get_state() == 0 else 0)
+            self.main_matrix[i + 1][j + 1].set_state(1 if self.main_matrix[i + 1][j + 1].get_state() == 0 else 0)
 
             if block_state == 3:
                 temp = self.main_matrix[i][j]

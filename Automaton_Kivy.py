@@ -196,7 +196,7 @@ class GameScreen(Screen):
 class WindowManager(ScreenManager):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.dimension = 2 # Original is 100
+        self.dimension = 6 # Original is 100
         self.logic = LogicManager(dimension=self.dimension, wraparound=False)
         gs = GameScreen(dimension=self.dimension, logic=self.logic)
         self.add_widget(gs)
