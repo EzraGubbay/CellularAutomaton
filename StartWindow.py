@@ -101,9 +101,9 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.utils import get_color_from_hex
 from kivy.uix.screenmanager import Screen
-from AutomatonKivy import WindowManager  # Your logic manager
+from Automaton_Kivy import WindowManager  # Your logic manager
 from ConfigScreen import ConfigScreen  # ✅ Make sure the file is named correctly
-from AutomatonKivy import WindowManager  # Import from the correct file
+from Automaton_Kivy import WindowManager  # Import from the correct file
 
 class StartWindow(BoxLayout):
     def __init__(self, screen_manager, **kwargs):
