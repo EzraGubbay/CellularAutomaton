@@ -139,7 +139,6 @@ class GameScreen(Screen):
         self.generation_label = Label(text="Generation: Blue", font_size=dp(20), font_name=FONT_PATH)
 
         self.populate_grid()
-        self.print_grid()
 
         self.add_widget(self.main_layout)
 
@@ -163,7 +162,6 @@ class GameScreen(Screen):
         self.playing = True
         self.logic.update()
         self.update_grid()
-        self.print_grid()
         current_iter = self.logic.iteration
         self.iteration_label.text = f"Iteration: {current_iter}"
         # Generation is blue if iteration is odd, else is red.
@@ -196,7 +194,7 @@ class GameScreen(Screen):
 class WindowManager(ScreenManager):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.dimension = 6 # Original is 100
+        self.dimension = 100 # Original is 100
         self.logic = LogicManager(dimension=self.dimension, wraparound=False)
         gs = GameScreen(dimension=self.dimension, logic=self.logic)
         self.add_widget(gs)
