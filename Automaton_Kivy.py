@@ -1,4 +1,4 @@
-'''
+"""
 TODO:
 1. Go to main menu:
     1.1 Display main menu title DONE
@@ -16,15 +16,13 @@ TODO:
     2.6 Display the Main Menu button to return to main menu.
 3. Special Configuration:
     3.1 Display title.
-    3.2 List special configurations, sectionated by type (gliders, traffic light etc.)
+    3.2 List special configurations, sectioned by type (gliders, traffic light etc.)
     3.3 List items should be buttons that leads to Automaton game, loaded with
         a specific initial state (the setting of the initial state is handled by
         LogicManager)
-'''
-from http.cookiejar import cut_port_re
+"""
 
 from kivy.config import Config
-from pygments.lexers import j
 
 # Set the initial window position BEFORE importing any UI modules
 Config.set('graphics', 'position', 'custom')
@@ -35,7 +33,6 @@ from kivy.app import App
 from kivy.lang.builder import Builder
 from kivy.core.window import Window
 from kivy.metrics import dp
-from kivy.graphics import Color
 from kivy.properties import ListProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
@@ -195,8 +192,8 @@ class GameScreen(Screen):
 class WindowManager(ScreenManager):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.dimension = 6 # Original is 100
-        self.logic = LogicManager(dimension=self.dimension, wraparound=False, config=SpecialConfigurations.blinkers["blinker4"])
+        self.dimension = 4 # Original is 100
+        self.logic = LogicManager(dimension=self.dimension, wraparound=True, config=None)
         gs = GameScreen(dimension=self.dimension, logic=self.logic)
         self.add_widget(gs)
 
