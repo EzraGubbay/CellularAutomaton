@@ -43,7 +43,7 @@ class LogicManager:
                 self.update_block(i, j)
 
     def _update_red(self):
-        print("updating red")
+        #print("updating red")
         for i in range(1, len(self.main_matrix) - 1, 2):
             for j in range(1, len(self.main_matrix) - 1, 2):
                 self.update_block(i, j)
