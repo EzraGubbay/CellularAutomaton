@@ -13,18 +13,18 @@ class LogicManager:
 
         # Hard-coded 10, in the future the size of the matrices
         # will be based on an input n.
-        n = dimension
+        self.dimension = dimension
         self.wraparound = wraparound
         self.iteration = 1
 
-        self.main_matrix = [[Cell() for i in range(n)] for j in range(n)]
+        self.main_matrix = [[Cell() for i in range(self.dimension)] for j in range(self.dimension)]
         if config is not None:
-            for i in range(n):
-                for j in range(n):
+            for i in range(self.dimension):
+                for j in range(self.dimension):
                     self.main_matrix[i][j].set_state(config[i][j])
 
-        self.blue_matrix = self._blue_matrix_builder(n)
-        self.red_matrix = self._red_matrix_builder(n)
+        self.blue_matrix = self._blue_matrix_builder(self.dimension)
+        self.red_matrix = self._red_matrix_builder(self.dimension)
 
     def update(self):
         generation_type = 1 if self.iteration % 2 == 1 else 0
@@ -34,6 +34,9 @@ class LogicManager:
             self._update_red()
         self.iteration += 1
 
+    # Blue and red essentially do the same thing, except use different indexes.
+    # Red also may have wraparound.
+    #
     def _update_blue(self):
         for i in range(0, len(self.main_matrix), 2):
             for j in range(0, len(self.main_matrix), 2):
@@ -45,8 +48,8 @@ class LogicManager:
             for j in range(1, len(self.main_matrix) - 1, 2):
                 self.update_block(i, j)
 
-        # if self.wraparound:
-        #     self.update_frame_blocks()
+        if self.wraparound:
+            self._update_frame_blocks()
 
     def update_block(self, i, j):
         block_state = (
@@ -71,27 +74,76 @@ class LogicManager:
                 self.main_matrix[i][j + 1] = self.main_matrix[i + 1][j]
                 self.main_matrix[i + 1][j] = temp
 
-    # def update_frame_blocks(self):
-    #     block_state = (
-    #         self.main_matrix[0][0].get_state() +
-    #         self.main_matrix[0][len(self.main_matrix) - 1].get_state() +
-    #         self.main_matrix[len(self.main_matrix) - 1][0].get_state() +
-    #         self.main_matrix[len(self.main_matrix) - 1][len(self.main_matrix) - 1].get_state()
-    #     )
-    #
-    #     if block_state != 2:
-    #         self.main_matrix[0][0].set_state(1 if self.main_matrix[0][0].get_state() == 0 else 0)
-    #         self.main_matrix[0][len(self.main_matrix) - 1].set_state(1 if self.main_matrix[0][len(self.main_matrix) - 1].get_state() == 0 else 0)
-    #         self.main_matrix[len(self.main_matrix) - 1][0].set_state(1 if self.main_matrix[len(self.main_matrix) - 1][0].get_state() == 0 else 0)
-    #         self.main_matrix[len(self.main_matrix) - 1][len(self.main_matrix) - 1].set_state(1 if self.main_matrix[len(self.main_matrix) - 1][len(self.main_matrix) - 1].get_state() == 0 else 0)
-    #
-    #         if block_state == 3:
-    #             temp = self.main_matrix[0][0]
-    #             self.main_matrix[0][0] = self.main_matrix[len(self.main_matrix) - 1][len(self.main_matrix) - 1]
-    #             self.main_matrix[len(self.main_matrix) - 1][len(self.main_matrix) - 1] = temp
-    #             temp = self.main_matrix[0][len(self.main_matrix) - 1]
-    #             self.main_matrix[0][len(self.main_matrix) - 1] = self.main_matrix[len(self.main_matrix) - 1][0]
-    #             self.main_matrix[len(self.main_matrix) - 1][0] = temp
+    def _update_frame_blocks(self):
+        # Check the corner block
+        block_state = (
+            self.main_matrix[0][0].get_state() +
+            self.main_matrix[0][self.dimension - 1].get_state() +
+            self.main_matrix[self.dimension - 1][0].get_state() +
+            self.main_matrix[self.dimension - 1][self.dimension - 1].get_state()
+        )
+
+        if block_state != 2:
+            self.main_matrix[0][0].set_state(1 if self.main_matrix[0][0].get_state() == 0 else 0)
+            self.main_matrix[0][self.dimension - 1].set_state(1 if self.main_matrix[0][self.dimension - 1].get_state() == 0 else 0)
+            self.main_matrix[self.dimension - 1][0].set_state(1 if self.main_matrix[self.dimension - 1][0].get_state() == 0 else 0)
+            self.main_matrix[self.dimension - 1][self.dimension - 1].set_state(1 if self.main_matrix[self.dimension - 1][self.dimension - 1].get_state() == 0 else 0)
+
+            if block_state == 3:
+                temp = self.main_matrix[0][0]
+                self.main_matrix[0][0] = self.main_matrix[self.dimension - 1][self.dimension - 1]
+                self.main_matrix[self.dimension - 1][self.dimension - 1] = temp
+                temp = self.main_matrix[0][self.dimension - 1]
+                self.main_matrix[0][self.dimension - 1] = self.main_matrix[self.dimension - 1][0]
+                self.main_matrix[self.dimension - 1][0] = temp
+
+        # Check for non-corner frame blocks - vertical
+        for i in range(1, self.dimension - 1, 2):
+            block_state_vertical = (
+                self.main_matrix[i][0].get_state() +
+                self.main_matrix[i][self.dimension - 1].get_state() +
+                self.main_matrix[i + 1][0].get_state() +
+                self.main_matrix[i + 1][self.dimension - 1].get_state()
+            )
+
+            block_state_horizontal = (
+                    self.main_matrix[0][i].get_state() +
+                    self.main_matrix[self.dimension - 1][i].get_state() +
+                    self.main_matrix[0][i + 1].get_state() +
+                    self.main_matrix[self.dimension - 1][i + 1].get_state()
+            )
+
+            if block_state_vertical != 2:
+                self.main_matrix[i][0].set_state(1 if self.main_matrix[i][0].get_state() == 0 else 0)
+                self.main_matrix[i][self.dimension - 1].set_state(
+                    1 if self.main_matrix[i][self.dimension - 1].get_state() == 0 else 0)
+                self.main_matrix[i + 1][0].set_state(
+                    1 if self.main_matrix[i + 1][0].get_state() == 0 else 0)
+                self.main_matrix[i + 1][self.dimension - 1].set_state(
+                    1 if self.main_matrix[i + 1][self.dimension - 1].get_state() == 0 else 0)
+
+                if block_state_vertical == 3:
+                    temp = self.main_matrix[i][0]
+                    self.main_matrix[i][0] = self.main_matrix[i + 1][self.dimension - 1]
+                    self.main_matrix[i + 1][self.dimension - 1] = temp
+                    temp = self.main_matrix[i][self.dimension - 1]
+                    self.main_matrix[i][self.dimension - 1] = self.main_matrix[i + 1][0]
+                    self.main_matrix[i + 1][0] = temp
+
+            if block_state_horizontal != 2:
+                self.main_matrix[0][i].set_state(1 if self.main_matrix[0][i].get_state() == 0 else 0)
+                self.main_matrix[self.dimension - 1][i].set_state(1 if self.main_matrix[self.dimension - 1][i].get_state() == 0 else 0)
+                self.main_matrix[0][i + 1].set_state(1 if self.main_matrix[0][i + 1].get_state() == 0 else 0)
+                self.main_matrix[self.dimension - 1][i + 1].set_state(1 if self.main_matrix[self.dimension - 1][i + 1].get_state() == 0 else 0)
+
+                if block_state_horizontal == 3:
+                    temp = self.main_matrix[0][i]
+                    self.main_matrix[0][i] = self.main_matrix[self.dimension - 1][i + 1]
+                    self.main_matrix[self.dimension - 1][i + 1] = temp
+                    temp = self.main_matrix[0][i + 1]
+                    self.main_matrix[0][i + 1] = self.main_matrix[self.dimension - 1][i]
+                    self.main_matrix[self.dimension - 1][i] = temp
+
 
     ### NOT USED ###
     def _generation_type(self):
