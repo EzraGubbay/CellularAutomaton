@@ -1,4 +1,4 @@
-def create_diagonal_grid(block, grid_size=50):
+def create_diagonal_grid(block, grid_size=64):
     # Create a grid filled with zeros
     grid = [[0 for _ in range(grid_size)] for _ in range(grid_size)]
     block_size = len(block)
@@ -18,7 +18,7 @@ blinkers = {
         [1, 1, 1, 1],
         [0, 0, 0, 0]
     ],
-    "blinker2": [
+    "blinker2": [#intersting with wraparound
         [0, 0, 1, 0, 0, 0],
         [0, 1, 0, 1, 0, 0],
         [1, 0, 0, 0, 1, 0],
@@ -26,7 +26,7 @@ blinkers = {
         [0, 0, 1, 0, 0, 0],
         [0, 0, 0, 0, 0, 0]
     ],
-    "blinker3": [
+    "blinker3": [#intersting with wraparound
         [0, 0, 0, 1, 1, 0, 0, 0],
         [0, 0, 1, 1, 1, 1, 0, 0],
         [0, 1, 1, 1, 1, 1, 1, 0],
@@ -36,7 +36,7 @@ blinkers = {
         [0, 0, 1, 1, 1, 1, 0, 0],
         [0, 0, 0, 1, 1, 0, 0, 0]
     ],
-    "blinker4": [
+    "blinker4": [ #intersting with wraparound
     [0, 1, 1, 1, 1, 0],
     [1, 0, 0, 0, 0, 1],
     [1, 0, 0, 0, 0, 1],
@@ -45,7 +45,7 @@ blinkers = {
     [0, 1, 1, 1, 1, 0]
     ]
     ,
-    "blinker5": [
+    "blinker5": [ #intersting with wraparound, repetitive every 12 gen
     [1, 1, 0, 0],
     [1, 1, 0, 0],
     [1, 1, 0, 0],
@@ -60,16 +60,16 @@ gliders = {
         [0, 0, 0, 1, 0],
         [0, 0, 0, 0, 0]
     ],
-    "glider2": [
+    "glider2": [ #intersting with wraparound, repetitive every 4 gen
         [1, 1],
         [1, 1]
     ],
-    "glider3": [
+    "glider3": [ #intersting with wraparound, repetitive every 8 gen
         [1]
     ]
 }
 traffic_lights = {  
-    "traffic1": [
+    "traffic1": [ #intersting with wraparound, somthing starts climbing on thre bottom left
         [0, 0, 0, 0, 0],
         [1, 1, 1, 1, 1],
         [0, 0, 0, 0, 0],
@@ -77,11 +77,18 @@ traffic_lights = {
         [0, 0, 0, 0, 0]
     ],
     "traffic2": [
-        [1, 1],
-        [1, 1]
+        [0, 0, 0, 0],
+        [0, 1, 1, 0],
+        [1, 0, 0, 1],
+        [0, 0, 0, 0],
     ],
     "traffic3": [
-        [1]
+        [0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 1, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 1, 1, 0, 0],
+        
     ]
 }
 

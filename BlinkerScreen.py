@@ -11,9 +11,10 @@ from LogicManager import LogicManager
 from Automaton_Kivy import GameScreen
 
 class BlinkerScreen(SpecialConfigScreen):
-    def __init__(self, screen_manager, **kwargs):
+    def __init__(self, screen_manager, wraparound=False,**kwargs):
         super().__init__(**kwargs)
         self.name = 'blinkers'
+        self.wraparound = wraparound  # Set wraparound property
         self.screen_manager = screen_manager
         button_color = get_color_from_hex('#143D4B')
         layout = BoxLayout(orientation='vertical', padding=20, spacing=15)

@@ -104,7 +104,10 @@ from kivy.uix.screenmanager import Screen
 from Automaton_Kivy import WindowManager  # Your logic manager
 from ConfigScreen import ConfigScreen  # ✅ Make sure the file is named correctly
 from Automaton_Kivy import WindowManager  # Import from the correct file
-
+from ConfigScreen import ConfigScreen
+from BlinkerScreen import BlinkerScreen
+from GliderScreen import GliderScreen
+from TrafficLightScreen import TrafficLightScreen
 class StartWindow(BoxLayout):
     def __init__(self, screen_manager, **kwargs):
         super(StartWindow, self).__init__(**kwargs)
@@ -178,16 +181,17 @@ class StartWindow(BoxLayout):
     def open_config_screen(self, instance):
         if not self.screen_manager.has_screen('config'):
             from ConfigScreen import ConfigScreen
-            self.screen_manager.add_widget(ConfigScreen(name='config', screen_manager=self.screen_manager))
+            self.screen_manager.add_widget(ConfigScreen(name='config', screen_manager=self.screen_manager, wraparound=self.wrap_around_active))
+
 
         self.screen_manager.transition.direction = 'left'  # Always reset direction
         self.screen_manager.current = 'config'
     
     def open_game_screen(self, instance):
         self.screen_manager.transition.direction = 'left'
-
+        
         if not self.screen_manager.has_screen('game'):
-            game_container = WindowManager()  # contains GameScreen already
+            game_container = WindowManager(wraparound=self.wrap_around_active)  # contains GameScreen already
 
             # Wrap it in a Screen
             game_screen_wrapper = Screen(name='game')
