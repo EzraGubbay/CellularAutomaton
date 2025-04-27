@@ -7,8 +7,9 @@ from kivy.uix.scrollview import ScrollView  # add this at the top
 from SpecialConfigurations import gliders
 from LogicManager import LogicManager
 from Automaton_Kivy import GameScreen
-
-class GliderScreen(Screen):
+from SpecialConfigScreen import SpecialConfigScreen
+from SpecialConfigurations import diagonal_gliders
+class GliderScreen(SpecialConfigScreen):
     def __init__(self, screen_manager, **kwargs):
         super().__init__(**kwargs)
         self.name = 'gliders'
@@ -28,7 +29,7 @@ class GliderScreen(Screen):
                 background_normal='',
                 color=(1, 1, 1, 1)
             )
-            btn.bind(on_press=lambda instance, name=name: self.load_config(name))
+            btn.bind(on_press=lambda instance, name=name: self.load_config(name, diagonal_gliders))
             button_column.add_widget(btn)
 
         back = Button(
@@ -46,38 +47,38 @@ class GliderScreen(Screen):
         layout.add_widget(button_area)
         self.add_widget(layout)
 
-    def load_config(self, config_name):
-        config = gliders[config_name]
-        config_height = len(config)
-        config_width = len(config[0])
-        spacing = 2
-        dimension = 50
+    # def load_config(self, config_name):
+    #     config = gliders[config_name]
+    #     config_height = len(config)
+    #     config_width = len(config[0])
+    #     spacing = 2
+    #     dimension = 50
 
-        logic = LogicManager(dimension=dimension, wraparound=False)
+    #     logic = LogicManager(dimension=dimension, wraparound=False)
 
-        for i in range(dimension):
-            for j in range(dimension):
-                logic.main_matrix[i][j].set_state(0)
+    #     for i in range(dimension):
+    #         for j in range(dimension):
+    #             logic.main_matrix[i][j].set_state(0)
 
-        max_tiles = min(
-            (dimension - config_height) // (config_height + spacing) + 1,
-            (dimension - config_width) // (config_width + spacing) + 1
-        )
+    #     max_tiles = min(
+    #         (dimension - config_height) // (config_height + spacing) + 1,
+    #         (dimension - config_width) // (config_width + spacing) + 1
+    #     )
 
-        for t in range(max_tiles):
-            row_offset = t * (config_height + spacing)
-            col_offset = t * (config_width + spacing)
-            for y in range(config_height):
-                for x in range(config_width):
-                    logic.main_matrix[row_offset + y][col_offset + x].set_state(config[y][x])
+    #     for t in range(max_tiles):
+    #         row_offset = t * (config_height + spacing)
+    #         col_offset = t * (config_width + spacing)
+    #         for y in range(config_height):
+    #             for x in range(config_width):
+    #                 logic.main_matrix[row_offset + y][col_offset + x].set_state(config[y][x])
 
-        if 'game' in self.screen_manager.screen_names:
-            self.screen_manager.remove_widget(self.screen_manager.get_screen('game'))
+    #     if 'game' in self.screen_manager.screen_names:
+    #         self.screen_manager.remove_widget(self.screen_manager.get_screen('game'))
 
-        game_screen = GameScreen(dimension=dimension, logic=logic)
-        game_screen.name = 'game'
-        self.screen_manager.add_widget(game_screen)
-        self.screen_manager.current = 'game'
+    #     game_screen = GameScreen(dimension=dimension, logic=logic)
+    #     game_screen.name = 'game'
+    #     self.screen_manager.add_widget(game_screen)
+    #     self.screen_manager.current = 'game'
 
     def go_back(self, instance):
         self.screen_manager.transition.direction = 'right'
