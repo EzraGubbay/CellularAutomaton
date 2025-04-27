@@ -10,11 +10,11 @@ from Automaton_Kivy import GameScreen
 from SpecialConfigScreen import SpecialConfigScreen
 from SpecialConfigurations import diagonal_gliders
 class GliderScreen(SpecialConfigScreen):
-    def __init__(self, screen_manager, **kwargs):
+    def __init__(self, screen_manager, wraparound=False, **kwargs):
         super().__init__(**kwargs)
         self.name = 'gliders'
         self.screen_manager = screen_manager
-
+        self.wraparound = wraparound  # Set wraparound property
         button_color = get_color_from_hex('#143D4B')
         layout = BoxLayout(orientation='vertical', padding=20, spacing=15)
         button_area = AnchorLayout(anchor_x='center', anchor_y='top', size_hint=(1, 1))
@@ -29,7 +29,7 @@ class GliderScreen(SpecialConfigScreen):
                 background_normal='',
                 color=(1, 1, 1, 1)
             )
-            btn.bind(on_press=lambda instance, name=name: self.load_config(name, diagonal_gliders))
+            btn.bind(on_press=lambda instance, name=name: self.load_ready_config(name, diagonal_gliders))
             button_column.add_widget(btn)
 
         back = Button(

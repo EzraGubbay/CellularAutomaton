@@ -11,9 +11,10 @@ from TrafficLightScreen import TrafficLightScreen
 
 
 class ConfigScreen(Screen):
-    def __init__(self, screen_manager, **kwargs):
+    def __init__(self, screen_manager, wraparound=False, **kwargs):
         super().__init__(**kwargs)
         self.name = 'config'
+        self.wraparound = wraparound  # Set wraparound property
         self.screen_manager = screen_manager  # Set reference to the main screen manager
 
         Window.clearcolor = (0.9, 0.9, 0.9, 1)
@@ -59,17 +60,17 @@ class ConfigScreen(Screen):
     def go_to_screen(self, screen_name):
         if screen_name == "blinkers" and "blinkers" not in self.screen_manager.screen_names:
             from BlinkerScreen import BlinkerScreen
-            screen = BlinkerScreen(screen_manager=self.screen_manager)
+            screen = BlinkerScreen(screen_manager=self.screen_manager,wraparound=self.wraparound)
             self.screen_manager.add_widget(screen)
 
         elif screen_name == "gliders" and "gliders" not in self.screen_manager.screen_names:
             from GliderScreen import GliderScreen
-            screen = GliderScreen(screen_manager=self.screen_manager)
+            screen = GliderScreen(screen_manager=self.screen_manager, wraparound=self.wraparound)
             self.screen_manager.add_widget(screen)
 
         elif screen_name == "traffic_lights" and "traffic_lights" not in self.screen_manager.screen_names:
             from TrafficLightScreen import TrafficLightScreen
-            screen = TrafficLightScreen(screen_manager=self.screen_manager)
+            screen = TrafficLightScreen(screen_manager=self.screen_manager, wraparound=self.wraparound)
             self.screen_manager.add_widget(screen)
 
         self.screen_manager.transition.direction = 'left'

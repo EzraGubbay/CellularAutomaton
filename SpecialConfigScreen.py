@@ -8,7 +8,7 @@ class SpecialConfigScreen(Screen):
         config = config_dict[config_name]
         dimension = len(config)
 
-        logic = LogicManager(dimension=dimension, wraparound=False, config=config)
+        logic = LogicManager(dimension=dimension, wraparound=self.wraparound, config=config)
 
         if 'game' in self.screen_manager.screen_names:
             self.screen_manager.remove_widget(self.screen_manager.get_screen('game'))
