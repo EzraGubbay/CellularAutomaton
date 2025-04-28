@@ -66,6 +66,23 @@ gliders = {
 
 }
 
+traffic_lights = {
+    "traffic1": [
+        [0, 0, 0, 0, 0],
+        [1, 1, 1, 1, 1],
+        [0, 0, 0, 0, 0],
+        [1, 1, 1, 1, 1],
+        [0, 0, 0, 0, 0]
+    ],
+    "traffic2": [
+        [1, 1],
+        [1, 1]
+    ],
+    "traffic3": [
+        [1]
+    ]
+}
+
 interesting = {
     "interesting1#not_wraparound":
         [[1 if j < 50 and 1 < i < 98 else 0 for j in range(100)] for i in range(100)],
