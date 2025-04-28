@@ -91,13 +91,13 @@ class GameScreen(Screen):
             text="Start",
             size_hint=(1, 0.08),
             background_color=(0.2, 0.6, 0.8, 1),
-            on_release=self.play
+            on_press=self.play
         )
         self.pause = Button(
             text="Pause",
             size_hint=(1, 0.08),
             background_color=(0.2, 0.6, 0.8, 1),
-            on_release=lambda _: self.toggle_pause(),
+            on_press=self.toggle_pause,
             disabled=True
         )
 
@@ -105,7 +105,7 @@ class GameScreen(Screen):
             text="Move One Iteration",
             size_hint=(1, 0.08),
             background_color=(0.2, 0.6, 0.8, 1),
-            on_release=lambda _: Clock.schedule_once(self.iteration)
+            on_press=lambda _: Clock.schedule_once(self.iteration)
         )
 
         self.back = Button(
@@ -185,9 +185,8 @@ class GameScreen(Screen):
         # If user paused or stopped the game for some reason, stop iterating.
         if not self.playing or self.logic.iteration >= 250:
             Clock.unschedule(self.iteration)
-            self.pause.disabled = True
 
-    def toggle_pause(self):
+    def toggle_pause(self, *args):
         if self.playing:
             self.playing = False
             self.pause.text = 'Resume'
@@ -201,6 +200,7 @@ class GameScreen(Screen):
     def return_to_main_menu(self, instance):
         self.manager.transition.direction = 'right'
         self.manager.current = 'start'
+        self.manager.remove_widget(self)
 
     def update_grid(self):
         for i in range(self.grid_size):

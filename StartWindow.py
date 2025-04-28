@@ -2,9 +2,9 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.utils import get_color_from_hex
 from kivy.uix.screenmanager import Screen
-from AutomatonKivy import WindowManager  # Your logic manager
-from ConfigScreen import ConfigScreen  # ✅ Make sure the file is named correctly
-from AutomatonKivy import WindowManager  # Import from the correct file
+from Automaton_Kivy import GameScreen
+from ConfigScreen import ConfigScreen
+from LogicManager import LogicManager
 
 class StartWindow(BoxLayout):
     def __init__(self, screen_manager, **kwargs):
@@ -13,6 +13,7 @@ class StartWindow(BoxLayout):
         self.padding = [0, 0, 0, 0]
         self.spacing = 10
         self.screen_manager = screen_manager
+        self.dimension = 10 # Original is 100
 
         button_color = get_color_from_hex('#143D4B')
 
@@ -35,6 +36,8 @@ class StartWindow(BoxLayout):
             background_normal='',
             color=(1, 1, 1, 1)
         )
+
+        self.logic = LogicManager(dimension=self.dimension, wraparound=self.wrap_around_button.state, config=None)
 
         def toggle_wrap_around(instance):
             self.wrap_around_active = not self.wrap_around_active
@@ -87,14 +90,7 @@ class StartWindow(BoxLayout):
     def open_game_screen(self, instance):
         self.screen_manager.transition.direction = 'left'
 
-        if not self.screen_manager.has_screen('game'):
-            game_container = WindowManager()  # contains GameScreen already
-
-            # Wrap it in a Screen
-            game_screen_wrapper = Screen(name='game')
-            game_screen_wrapper.add_widget(game_container)
-
-            self.screen_manager.add_widget(game_screen_wrapper)
+        self.screen_manager.add_widget(GameScreen(dimension=self.dimension, logic=self.logic, name='game'))
 
         self.screen_manager.current = 'game'
 
