@@ -16,8 +16,9 @@ class LogicManager:
         self.dimension = dimension
         self.wraparound = wraparound
         self.iteration = 1
+        self.probability = 0.5 # Probability that a Cell will get state = 1.
 
-        self.main_matrix = [[Cell() for i in range(self.dimension)] for j in range(self.dimension)]
+        self.main_matrix = [[Cell(self.probability) for i in range(self.dimension)] for j in range(self.dimension)]
         if config is not None:
             for i in range(self.dimension):
                 for j in range(self.dimension):
