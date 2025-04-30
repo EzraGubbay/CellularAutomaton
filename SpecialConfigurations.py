@@ -1,21 +1,33 @@
+def create_diagonal_grid(block, grid_size=64):
+    # Create a grid filled with zeros
+    grid = [[0 for _ in range(grid_size)] for _ in range(grid_size)]
+    block_size = len(block)
+
+    # Place the block along the diagonal
+    for start in range(0, grid_size, block_size):
+        for i in range(block_size):
+            for j in range(block_size):
+                if start + i < grid_size and start + j < grid_size:
+                    grid[start + i][start + j] = block[i][j]
+    return grid
 
 
 blinkers = {
-    "blinker1#not_wraparound":
-        [[1 if 1 < j < 50 and 1 < i < 98 else 0 for j in range(100)] for i in range(100)],
-    "blinker1@test": [
-        [1, 1, 0, 0],
-        [1, 1, 0, 0],
-        [1, 1, 0, 0],
-        [1, 1, 0, 0]
-    ],
-    "blinker2@test": [
-        [1, 1, 1, 1],
-        [1, 1, 1, 1],
+    "blinker1": [
         [0, 0, 0, 0],
+        [1, 1, 1, 1],
+        [1, 1, 1, 1],
         [0, 0, 0, 0]
     ],
-    "blinker3": [
+    "blinker2": [  # intersting with wraparound
+        [0, 0, 1, 0, 0, 0],
+        [0, 1, 0, 1, 0, 0],
+        [1, 0, 0, 0, 1, 0],
+        [0, 1, 0, 1, 0, 0],
+        [0, 0, 1, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0]
+    ],
+    "blinker3": [  # intersting with wraparound
         [0, 0, 0, 1, 1, 0, 0, 0],
         [0, 0, 1, 1, 1, 1, 0, 0],
         [0, 1, 1, 1, 1, 1, 1, 0],
@@ -25,49 +37,40 @@ blinkers = {
         [0, 0, 1, 1, 1, 1, 0, 0],
         [0, 0, 0, 1, 1, 0, 0, 0]
     ],
-    "blinker4": [
-    [0, 1, 1, 1, 1, 0],
-    [1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 1],
-    [0, 1, 1, 1, 1, 0]
+    "blinker4": [  # intersting with wraparound
+        [0, 1, 1, 1, 1, 0],
+        [1, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 1],
+        [0, 1, 1, 1, 1, 0]
     ]
     ,
-    "blinker5": [
-    [1, 1, 0, 0],
-    [1, 1, 0, 0],
-    [1, 1, 0, 0],
-    [1, 1, 0, 0],
+    "blinker5": [  # intersting with wraparound, repetitive every 12 gen
+        [1, 1, 0, 0],
+        [1, 1, 0, 0],
+        [1, 1, 0, 0],
+        [1, 1, 0, 0],
     ]
 }
-
 gliders = {
     "glider1": [
-        [1, 1, 0, 1, 1, 1, 0, 0, 0, 0],
-        [1, 1, 0, 1, 1, 1, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [0, 0, 0, 0, 0],
+        [0, 1, 0, 1, 0],
+        [0, 0, 1, 1, 1],
+        [0, 0, 0, 1, 0],
+        [0, 0, 0, 0, 0]
     ],
-    "glider2": [
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 1],
+    "glider2": [  # intersting with wraparound, repetitive every 4 gen
+        [1, 1],
+        [1, 1]
     ],
-    "glider1@test": [[1 if (i,j) in [(0, 0), (0, 1), (1, 0)] else 0 for j in range(100)] for i in range(100)],
-    "glider2@test": [[1 if (i, j) in [(80,80), (80,81), (81,81), (81,82), (82,82)] else 0 for j in range(100)] for i in range(100)]
-
+    "glider3": [  # intersting with wraparound, repetitive every 8 gen
+        [1]
+    ]
 }
-
 traffic_lights = {
-    "traffic1": [
+    "traffic1": [  # intersting with wraparound, somthing starts climbing on thre bottom left
         [0, 0, 0, 0, 0],
         [1, 1, 1, 1, 1],
         [0, 0, 0, 0, 0],
@@ -75,32 +78,21 @@ traffic_lights = {
         [0, 0, 0, 0, 0]
     ],
     "traffic2": [
-        [1, 1],
-        [1, 1]
+        [0, 0, 0, 0],
+        [0, 1, 1, 0],
+        [1, 0, 0, 1],
+        [0, 0, 0, 0],
     ],
     "traffic3": [
-        [1]
+        [0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 1, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 1, 1, 0, 0],
+
     ]
 }
 
-interesting = {
-    "interesting1#not_wraparound":
-        [[1 if j < 50 and 1 < i < 98 else 0 for j in range(100)] for i in range(100)],
-}
-
-traffic_lights = {
-    "traffic1": [
-        [0, 0, 0, 0, 0],
-        [1, 1, 1, 1, 1],
-        [0, 0, 0, 0, 0],
-        [1, 1, 1, 1, 1],
-        [0, 0, 0, 0, 0]
-    ],
-    "traffic2": [
-        [1, 1],
-        [1, 1]
-    ],
-    "traffic3": [
-        [1]
-    ]
-}
+diagonal_blinkers = {name: create_diagonal_grid(pattern) for name, pattern in blinkers.items()}
+diagonal_gliders = {name: create_diagonal_grid(pattern) for name, pattern in gliders.items()}
+diagonal_traffic_lights = {name: create_diagonal_grid(pattern) for name, pattern in traffic_lights.items()}

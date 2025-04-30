@@ -1,10 +1,15 @@
+from kivy.metrics import dp
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.utils import get_color_from_hex
 from kivy.uix.screenmanager import Screen
+
+import SpecialConfigurations
 from Automaton_Kivy import GameScreen
 from ConfigScreen import ConfigScreen
 from LogicManager import LogicManager
+from kivy.uix.slider import Slider
+from kivy.uix.label import Label
 
 class StartWindow(BoxLayout):
     def __init__(self, screen_manager, **kwargs):
@@ -20,9 +25,9 @@ class StartWindow(BoxLayout):
         button_layout = BoxLayout(
             orientation='vertical',
             size_hint=(None, None),
-            spacing=15,
+            spacing=50,
             width=400,
-            height=400,
+            height=700,
             pos_hint={'center_x': 0.5}
         )
 
@@ -36,8 +41,6 @@ class StartWindow(BoxLayout):
             background_normal='',
             color=(1, 1, 1, 1)
         )
-
-        self.logic = LogicManager(dimension=self.dimension, wraparound=self.wrap_around_button.state, config=None)
 
         def toggle_wrap_around(instance):
             self.wrap_around_active = not self.wrap_around_active
@@ -76,6 +79,32 @@ class StartWindow(BoxLayout):
         config.bind(on_press=self.open_config_screen)
         button_layout.add_widget(config)
 
+        # Cell initial state probability modifier
+        self.probability_slider = Slider(
+            min=0,
+            max=1,
+            value=0.5,
+            step=0.05,
+            size_hint=(1, None),
+            height=80
+        )
+        self.slider_label = Label(
+            text=f'Initial State Probability: {self.probability_slider.value}',
+            color=(0, 0, 0, 1),
+            size_hint=(1, None),
+            height=80,
+            font_name='Fonts/Montserrat-Medium.ttf'
+        )
+        self.probability_slider.bind(
+            value=lambda instance, value: setattr(
+                self.slider_label,
+                'text',
+                f'Initial State Probability: {round(self.probability_slider.value, 2)}'
+            )
+        )
+        button_layout.add_widget(self.probability_slider)
+        button_layout.add_widget(self.slider_label)
+
         self.add_widget(button_layout)
         self.add_widget(BoxLayout(size_hint=(1, 1)))  # Spacer
 
@@ -90,7 +119,8 @@ class StartWindow(BoxLayout):
     def open_game_screen(self, instance):
         self.screen_manager.transition.direction = 'left'
 
-        self.screen_manager.add_widget(GameScreen(dimension=self.dimension, logic=self.logic, name='game'))
+        logic = LogicManager(dimension=self.dimension, wraparound=self.wrap_around_button.state, config=SpecialConfigurations.gliders["glider2@test"], probability=self.probability_slider.value)
+        self.screen_manager.add_widget(GameScreen(dimension=self.dimension, logic=logic, name='game'))
 
         self.screen_manager.current = 'game'
 

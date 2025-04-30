@@ -82,7 +82,8 @@ class GameScreen(Screen):
             text="Controls",
             font_size=dp(24),
             size_hint=(1, 0.1),
-            font_name=FONT_PATH
+            font_name=FONT_PATH,
+            color=(0, 0, 0, 1) # Black
         )
         self.controls.add_widget(control_title)
 
