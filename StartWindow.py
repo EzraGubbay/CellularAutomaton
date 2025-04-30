@@ -119,7 +119,7 @@ class StartWindow(BoxLayout):
     def open_game_screen(self, instance):
         self.screen_manager.transition.direction = 'left'
 
-        logic = LogicManager(dimension=self.dimension, wraparound=self.wrap_around_button.state, config=SpecialConfigurations.gliders["glider2@test"], probability=self.probability_slider.value)
+        logic = LogicManager(dimension=self.dimension, wraparound=self.wrap_around_button.state, config=None, probability=self.probability_slider.value)
         self.screen_manager.add_widget(GameScreen(dimension=self.dimension, logic=logic, name='game'))
 
         self.screen_manager.current = 'game'
