@@ -233,13 +233,3 @@ class WindowManager(ScreenManager):
 
 kv = Builder.load_file("Automaton.kv")
 Window.size = (1280, 896)
-
-class AutomatonApp(App):
-    def build(self):
-        wm = WindowManager()
-        return wm
-
-
-
-if __name__ == "__main__":
-    AutomatonApp().run()
