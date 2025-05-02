@@ -18,7 +18,7 @@ class StartWindow(BoxLayout):
         self.padding = [0, 0, 0, 0]
         self.spacing = 10
         self.screen_manager = screen_manager
-        self.dimension = 10 # Original is 100
+        self.dimension = 100 # Original is 100
 
         button_color = get_color_from_hex('#143D4B')
 
