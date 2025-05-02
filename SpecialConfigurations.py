@@ -1,4 +1,4 @@
-def create_diagonal_grid(block, grid_size=64):
+def create_diagonal_grid(block, grid_size=100):
     # Create a grid filled with zeros
     grid = [[0 for _ in range(grid_size)] for _ in range(grid_size)]
     block_size = len(block)

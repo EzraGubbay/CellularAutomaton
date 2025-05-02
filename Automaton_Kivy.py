@@ -171,12 +171,14 @@ class GameScreen(Screen):
         self.grid_container.add_widget(self.grid)
         self.main_layout.add_widget(self.grid_container)
 
-        # Create iteration label and generation label
+        # Create labels for iteration number, generation and metrics
         self.iteration_label = Label(text="Iteration: 1", font_size=dp(20), font_name=FONT_PATH, color=(0, 0, 0, 1))
         self.generation_label = Label(text="Generation: Blue", font_size=dp(20), font_name=FONT_PATH, color=(0, 0, 0, 1))
+        self.alive_label = Label(text=f'Alive Cells (Red):\n{self.logic.get_alive_cells()}', font_size=dp(20), font_name=FONT_PATH, color=(0, 0, 0, 1))
         self.labels = BoxLayout(orientation="vertical", size_hint=(1, 0.4), spacing=dp(5), pos_hint={"center_y": 0.8})
         self.labels.add_widget(self.iteration_label)
         self.labels.add_widget(self.generation_label)
+        self.labels.add_widget(self.alive_label)
         self.main_layout.add_widget(self.labels)
 
         self.add_widget(self.main_layout)
@@ -191,14 +193,18 @@ class GameScreen(Screen):
     def iteration(self, dt):
         self.logic.update()
         self.grid.render_canvas()
-        current_iter = self.logic.iteration
-        self.iteration_label.text = f"Iteration: {current_iter}"
-        # Generation is blue if iteration is odd, else is red.
-        self.generation_label.text = f'Generation: {"Blue" if current_iter % 2 == 1 else "Red" }'
+        self.update_labels()
 
         # If user paused or stopped the game for some reason, stop iterating.
         if not self.playing or self.logic.iteration >= 250:
             Clock.unschedule(self.iteration)
+
+    def update_labels(self):
+        current_iter = self.logic.iteration
+        self.iteration_label.text = f"Iteration: {current_iter}"
+        # Generation is blue if iteration is odd, else is red.
+        self.generation_label.text = f'Generation: {"Blue" if current_iter % 2 == 1 else "Red"}'
+        self.alive_label.text = f'Alive Cells (Red):\n{self.logic.get_alive_cells()}'
 
     def toggle_pause(self, *args):
         if self.playing:

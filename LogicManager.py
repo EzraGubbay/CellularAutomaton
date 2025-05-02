@@ -1,11 +1,12 @@
 
-### TODO - LogicManager
-# TODO: Change hardcoded n value in initializer to received input n. DONE
-# TODO: Add wraparound boolean input in initializer. DONE
-# TODO: Build Red Matrix appropriately for wraparound mode.
-
 from Cell import Cell
 from Block import Block
+
+# Data analysis stuff
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 class LogicManager:
 
@@ -17,12 +18,23 @@ class LogicManager:
         self.wraparound = wraparound
         self.iteration = 1
         self.probability = probability # Probability that a Cell will get state = 1.
+        # self.metrics = {
+        #     "alive": [] # Contains number of alive (red) cells per iteration.
+        #                 # Index 97 will return the number of alive cells during iteration 97
+        # }
 
         self.main_matrix = [[Cell(self.probability) for i in range(self.dimension)] for j in range(self.dimension)]
         if config is not None:
             for i in range(self.dimension):
                 for j in range(self.dimension):
                     self.main_matrix[i][j].set_state(config[i][j])
+
+        # Pandas code
+        datafile = 'data.csv'
+        columns = ["Iteration", "Alive Cells"]
+        pd.DataFrame(columns=columns).to_csv(datafile, index=False)
+        self.save_to_dataframe()
+
 
         self.blue_matrix = self._blue_matrix_builder(self.dimension)
         self.red_matrix = self._red_matrix_builder(self.dimension)
@@ -35,9 +47,12 @@ class LogicManager:
             self._update_red()
         self.iteration += 1
 
+        # Pandas code
+        self.save_to_dataframe()
+
+
     # Blue and red essentially do the same thing, except use different indexes.
     # Red also may have wraparound.
-    #
     def _update_blue(self):
         for i in range(0, len(self.main_matrix), 2):
             for j in range(0, len(self.main_matrix), 2):
@@ -164,3 +179,14 @@ class LogicManager:
 
     def _red_matrix_builder(self, n: int):
         return [[self._block_builder(i, j) for i in range(1, n - 1, 2)] for j in range(1, n - 1, 2)]
+
+    def get_alive_cells(self):
+        return sum(cell.get_state() for row in self.main_matrix for cell in row)
+
+    def save_to_dataframe(self):
+        pd.DataFrame([
+            {
+                "Iteration": self.iteration,
+                "Alive Cells": sum(cell.get_state() for row in self.main_matrix for cell in row)
+            }
+        ]).to_csv('data.csv', header=False, mode='a', index=False)
