@@ -9,15 +9,16 @@ from Block import Block
 
 class LogicManager:
 
-    def __init__(self, dimension: int, wraparound: bool = False, config: str = None):
+    def __init__(self, dimension: int, wraparound: bool = False, config: str = None, probability: float = 0.5):
 
         # Hard-coded 10, in the future the size of the matrices
         # will be based on an input n.
         self.dimension = dimension
         self.wraparound = wraparound
         self.iteration = 1
+        self.probability = probability # Probability that a Cell will get state = 1.
 
-        self.main_matrix = [[Cell() for i in range(self.dimension)] for j in range(self.dimension)]
+        self.main_matrix = [[Cell(self.probability) for i in range(self.dimension)] for j in range(self.dimension)]
         if config is not None:
             for i in range(self.dimension):
                 for j in range(self.dimension):

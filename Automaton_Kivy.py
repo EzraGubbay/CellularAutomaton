@@ -22,13 +22,6 @@ TODO:
         LogicManager)
 """
 
-from kivy.config import Config
-
-# Set the initial window position BEFORE importing any UI modules
-Config.set('graphics', 'position', 'custom')
-Config.set('graphics', 'left', '100')   # X coordinate from the left of the screen
-Config.set('graphics', 'top', '50')    # Y coordinate from the top of the screen
-
 from kivy.app import App
 from kivy.lang.builder import Builder
 from kivy.core.window import Window
@@ -40,6 +33,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
+from kivy.properties import Clock
 
 from LogicManager import LogicManager
 import SpecialConfigurations
@@ -72,7 +66,7 @@ class GameScreen(Screen):
         self.logic = logic
         self.playing = False
 
-        self.main_layout = BoxLayout(orientation="horizontal", spacing=dp(50))
+        self.main_layout = BoxLayout(orientation="horizontal", spacing=dp(10))
 
         # Game Controls
         self.controls = BoxLayout(
@@ -88,30 +82,44 @@ class GameScreen(Screen):
             text="Controls",
             font_size=dp(24),
             size_hint=(1, 0.1),
-            font_name=FONT_PATH
+            font_name=FONT_PATH,
+            color=(0, 0, 0, 1) # Black
         )
         self.controls.add_widget(control_title)
 
         # Control buttons
-        start = Button(
+        self.start = Button(
             text="Start",
             size_hint=(1, 0.08),
             background_color=(0.2, 0.6, 0.8, 1),
-            on_release=self.play
+            on_press=self.play
         )
-        pause = Button(
+        self.pause = Button(
             text="Pause",
             size_hint=(1, 0.08),
-            background_color=(0.2, 0.6, 0.8, 1)
+            background_color=(0.2, 0.6, 0.8, 1),
+            on_press=self.toggle_pause,
+            disabled=True
         )
-        step = Button(
+
+        self.step = Button(
             text="Move One Iteration",
             size_hint=(1, 0.08),
-            background_color=(0.2, 0.6, 0.8, 1)
+            background_color=(0.2, 0.6, 0.8, 1),
+            on_press=lambda _: Clock.schedule_once(self.iteration)
         )
-        self.controls.add_widget(start)
-        self.controls.add_widget(pause)
-        self.controls.add_widget(step)
+
+        self.back = Button(
+            text="Return to Main Menu",
+            size_hint=(1, 0.08),
+            background_color=(0.2, 0.6, 0.8, 1),
+            on_release=self.return_to_main_menu
+        )
+
+        self.controls.add_widget(self.start)
+        self.controls.add_widget(self.pause)
+        self.controls.add_widget(self.step)
+        self.controls.add_widget(self.back)
 
         # Spacer
         self.controls.add_widget(BoxLayout(size_hint=(1, 0.4)))
@@ -133,8 +141,12 @@ class GameScreen(Screen):
         self.main_layout.add_widget(self.grid_container)
 
         # Create iteration label and generation label
-        self.iteration_label = Label(text="Iteration: 1", font_size=dp(20), font_name=FONT_PATH)
-        self.generation_label = Label(text="Generation: Blue", font_size=dp(20), font_name=FONT_PATH)
+        self.iteration_label = Label(text="Iteration: 1", font_size=dp(20), font_name=FONT_PATH, color=(0, 0, 0, 1))
+        self.generation_label = Label(text="Generation: Blue", font_size=dp(20), font_name=FONT_PATH, color=(0, 0, 0, 1))
+        self.labels = BoxLayout(orientation="vertical", size_hint=(1, 0.4), spacing=dp(5), pos_hint={"center_y": 0.8})
+        self.labels.add_widget(self.iteration_label)
+        self.labels.add_widget(self.generation_label)
+        self.main_layout.add_widget(self.labels)
 
         self.populate_grid()
         #self.print_grid()
@@ -158,7 +170,13 @@ class GameScreen(Screen):
                 self.grid_container.add_widget(cell)
 
     def play(self, *args):
+        self.start.disabled = True
+        self.pause.disabled = False
+        self.step.disabled = True
         self.playing = True
+        Clock.schedule_interval(self.iteration, 1.0 / 2.0)
+
+    def iteration(self, dt):
         self.logic.update()
         self.update_grid()
         #self.print_grid()
@@ -166,6 +184,26 @@ class GameScreen(Screen):
         self.iteration_label.text = f"Iteration: {current_iter}"
         # Generation is blue if iteration is odd, else is red.
         self.generation_label.text = f'Generation: {"Blue" if current_iter % 2 == 1 else "Red" }'
+
+        # If user paused or stopped the game for some reason, stop iterating.
+        if not self.playing or self.logic.iteration >= 250:
+            Clock.unschedule(self.iteration)
+
+    def toggle_pause(self, *args):
+        if self.playing:
+            self.playing = False
+            self.pause.text = 'Resume'
+            self.step.disabled = False
+        else:
+            self.playing = True
+            self.pause.text = 'Pause'
+            self.step.disabled = True
+            Clock.schedule_interval(self.iteration, 1.0 / 2.0)
+
+    def return_to_main_menu(self, instance):
+        self.manager.transition.direction = 'right'
+        self.manager.current = 'start'
+        self.manager.remove_widget(self)
 
     def update_grid(self):
         for i in range(self.grid_size):
@@ -195,10 +233,10 @@ class WindowManager(ScreenManager):
     def __init__(self, wraparound=False,**kwargs):
         super().__init__(**kwargs)
         self.dimension = 4 # Original is 100
-        self.isWrapAround = wraparound
-        self.logic = LogicManager(dimension=self.dimension, wraparound=self.isWrapAround, config=None)
+        self.logic = LogicManager(dimension=self.dimension, wraparound=True, config=None)
         gs = GameScreen(dimension=self.dimension, logic=self.logic)
         self.add_widget(gs)
+
 
 kv = Builder.load_file("Automaton.kv")
 Window.size = (1280, 896)
