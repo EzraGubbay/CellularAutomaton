@@ -28,9 +28,7 @@ blinkers = {
         [1, 1],
         [1, 1]
     ],
-    "blinker2": [ 
-        [1],
-    ],
+
 }
 gliders = {
         "glider1": [  # intersting with wraparound, 
