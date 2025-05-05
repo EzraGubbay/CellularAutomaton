@@ -57,17 +57,23 @@ class ConfigScreen(Screen):
         self.add_widget(layout)
 
     def go_to_screen(self, screen_name):
-        if screen_name == "blinkers" and "blinkers" not in self.screen_manager.screen_names:
+        if screen_name == "blinkers":
+            if "blinkers" in self.screen_manager.screen_names:
+                self.screen_manager.remove_widget(self.screen_manager.get_screen("blinkers"))
             from BlinkerScreen import BlinkerScreen
             screen = BlinkerScreen(screen_manager=self.screen_manager,wraparound=self.wraparound)
             self.screen_manager.add_widget(screen)
 
-        elif screen_name == "gliders" and "gliders" not in self.screen_manager.screen_names:
+        elif screen_name == "gliders":
+            if "gliders" in self.screen_manager.screen_names:
+                self.screen_manager.remove_widget(self.screen_manager.get_screen("gliders"))
             from GliderScreen import GliderScreen
-            screen = GliderScreen(screen_manager=self.screen_manager, wraparound=self.wraparound)
+            screen = GliderScreen(screen_manager=self.screen_manager,wraparound=self.wraparound)
             self.screen_manager.add_widget(screen)
 
-        elif screen_name == "traffic_lights" and "traffic_lights" not in self.screen_manager.screen_names:
+        elif screen_name == "traffic_lights":
+            if "traffic_lights" in self.screen_manager.screen_names:
+                self.screen_manager.remove_widget(self.screen_manager.get_screen("traffic_lights"))
             from TrafficLightScreen import TrafficLightScreen
             screen = TrafficLightScreen(screen_manager=self.screen_manager, wraparound=self.wraparound)
             self.screen_manager.add_widget(screen)
