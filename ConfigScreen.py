@@ -4,10 +4,6 @@ from kivy.uix.button import Button
 from kivy.utils import get_color_from_hex
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.core.window import Window
-from BlinkerScreen import BlinkerScreen
-from GliderScreen import GliderScreen
-from TrafficLightScreen import TrafficLightScreen
-
 
 class ConfigScreen(Screen):
     def __init__(self, screen_manager, wraparound=False, **kwargs):

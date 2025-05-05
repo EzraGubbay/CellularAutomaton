@@ -1,14 +1,11 @@
-from kivy.uix.screenmanager import Screen
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.utils import get_color_from_hex
-from kivy.uix.scrollview import ScrollView  # add this at the top
 from SpecialConfigurations import gliders
-from LogicManager import LogicManager
-from Automaton_Kivy import GameScreen
 from SpecialConfigScreen import SpecialConfigScreen
 from SpecialConfigurations import diagonal_gliders
+
 class GliderScreen(SpecialConfigScreen):
     def __init__(self, screen_manager, wraparound=False, **kwargs):
         super().__init__(**kwargs)

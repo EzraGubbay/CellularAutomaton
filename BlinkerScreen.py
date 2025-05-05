@@ -1,14 +1,10 @@
-from kivy.uix.screenmanager import Screen
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.utils import get_color_from_hex
-from kivy.uix.scrollview import ScrollView  # add this at the top
 from SpecialConfigurations import blinkers
 from SpecialConfigScreen import SpecialConfigScreen
 from SpecialConfigurations import diagonal_blinkers
-from LogicManager import LogicManager
-from Automaton_Kivy import GameScreen
 
 class BlinkerScreen(SpecialConfigScreen):
     def __init__(self, screen_manager, wraparound=False,**kwargs):
@@ -48,52 +44,6 @@ class BlinkerScreen(SpecialConfigScreen):
         button_area.add_widget(button_column)
         layout.add_widget(button_area)
         self.add_widget(layout)
-
-    # def load_config(self, config_name):
-    #     config = blinkers[config_name]
-    #     config_height = len(config)
-    #     config_width = len(config[0])
-    #     spacing = 2
-    #     dimension = 50
-
-    #     logic = LogicManager(dimension=dimension, wraparound=False)
-
-    #     for i in range(dimension):
-    #         for j in range(dimension):
-    #             logic.main_matrix[i][j].set_state(0)
-
-    #     max_tiles = min(
-    #         (dimension - config_height) // (config_height + spacing) + 1,
-    #         (dimension - config_width) // (config_width + spacing) + 1
-    #     )
-
-    #     for t in range(max_tiles):
-    #         row_offset = t * (config_height + spacing)
-    #         col_offset = t * (config_width + spacing)
-    #         for y in range(config_height):
-    #             for x in range(config_width):
-    #                 logic.main_matrix[row_offset + y][col_offset + x].set_state(config[y][x])
-
-    #     if 'game' in self.screen_manager.screen_names:
-    #         self.screen_manager.remove_widget(self.screen_manager.get_screen('game'))
-
-    #     game_screen = GameScreen(dimension=dimension, logic=logic)
-    #     game_screen.name = 'game'
-    #     self.screen_manager.add_widget(game_screen)
-    #     self.screen_manager.current = 'game'
-    # def load_ready_config(self, config_name):
-    #     config = diagonal_blinkers[config_name]
-    #     dimension = len(config)  # Should be 50 or 100
-
-    #     logic = LogicManager(dimension=dimension, wraparound=False, config=config)
-
-    #     if 'game' in self.screen_manager.screen_names:
-    #         self.screen_manager.remove_widget(self.screen_manager.get_screen('game'))
-
-    #     game_screen = GameScreen(dimension=dimension, logic=logic)
-    #     game_screen.name = 'game'
-    #     self.screen_manager.add_widget(game_screen)
-    #     self.screen_manager.current = 'game'
 
     def go_back(self, instance):
         self.screen_manager.transition.direction = 'right'

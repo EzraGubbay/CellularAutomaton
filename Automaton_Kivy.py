@@ -1,11 +1,6 @@
-from kivy.app import App
-from kivy.lang.builder import Builder
-from kivy.core.window import Window
 from kivy.metrics import dp
-from kivy.properties import ListProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
-from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
@@ -13,7 +8,6 @@ from kivy.properties import Clock
 from kivy.graphics import Color, Rectangle, Line
 
 from LogicManager import LogicManager
-import SpecialConfigurations
 
 FONT_PATH = "Fonts/Montserrat-Medium.ttf"
 
@@ -166,7 +160,7 @@ class GameScreen(Screen):
             padding=dp(20)
         )
 
-        cell_size = 16 # Original is 16
+        cell_size = dp(8)
         self.grid = Grid(dimension=self.grid_size, logic=self.logic, cell_size=cell_size)
         self.grid_container.add_widget(self.grid)
         self.main_layout.add_widget(self.grid_container)
@@ -230,6 +224,3 @@ class WindowManager(ScreenManager):
         gs = GameScreen(dimension=self.dimension, logic=self.logic)
         self.add_widget(gs)
 
-
-kv = Builder.load_file("Automaton.kv")
-Window.size = (1280, 896)
