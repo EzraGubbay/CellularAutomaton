@@ -160,7 +160,7 @@ class GameScreen(Screen):
             padding=dp(20)
         )
 
-        cell_size = dp(8)
+        cell_size = 9
         self.grid = Grid(dimension=self.grid_size, logic=self.logic, cell_size=cell_size)
         self.grid_container.add_widget(self.grid)
         self.main_layout.add_widget(self.grid_container)
