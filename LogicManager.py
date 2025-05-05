@@ -12,10 +12,6 @@ class LogicManager:
         self.wraparound = wraparound
         self.iteration = 1
         self.probability = probability # Probability that a Cell will get state = 1.
-        # self.metrics = {
-        #     "alive": [] # Contains number of alive (red) cells per iteration.
-        #                 # Index 97 will return the number of alive cells during iteration 97
-        # }
 
         self.main_matrix = [[Cell(self.probability) for i in range(self.dimension)] for j in range(self.dimension)]
         if config is not None:
@@ -158,3 +154,6 @@ class LogicManager:
 
     def _red_matrix_builder(self, n: int):
         return [[self._block_builder(i, j) for i in range(1, n - 1, 2)] for j in range(1, n - 1, 2)]
+
+    def get_alive_cells(self):
+        return sum(cell.get_state() for row in self.main_matrix for cell in row)
