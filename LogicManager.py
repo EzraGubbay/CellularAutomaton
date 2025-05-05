@@ -2,12 +2,6 @@
 from Cell import Cell
 from Block import Block
 
-# Data analysis stuff
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-
 class LogicManager:
 
     def __init__(self, dimension: int, wraparound: bool = False, config: str = None, probability: float = 0.5):
@@ -29,27 +23,17 @@ class LogicManager:
                 for j in range(self.dimension):
                     self.main_matrix[i][j].set_state(config[i][j])
 
-        # Pandas code
-        datafile = 'data.csv'
-        columns = ["Iteration", "Alive Cells"]
-        pd.DataFrame(columns=columns).to_csv(datafile, index=False)
-        self.save_to_dataframe()
-
-
         self.blue_matrix = self._blue_matrix_builder(self.dimension)
         self.red_matrix = self._red_matrix_builder(self.dimension)
 
     def update(self):
+
         generation_type = 1 if self.iteration % 2 == 1 else 0
         if generation_type == 1:
             self._update_blue()
         else:
             self._update_red()
         self.iteration += 1
-
-        # Pandas code
-        self.save_to_dataframe()
-
 
     # Blue and red essentially do the same thing, except use different indexes.
     # Red also may have wraparound.
@@ -160,11 +144,6 @@ class LogicManager:
                     self.main_matrix[0][i + 1] = self.main_matrix[self.dimension - 1][i]
                     self.main_matrix[self.dimension - 1][i] = temp
 
-
-    ### NOT USED ###
-    def _generation_type(self):
-        return "even" if self.iteration % 2 == 0 else "odd"
-
     # Auxiliary methods - for code readability and modularity.
     def _block_builder(self, i: int, j: int):
         first = self.main_matrix[i][j]
@@ -179,14 +158,3 @@ class LogicManager:
 
     def _red_matrix_builder(self, n: int):
         return [[self._block_builder(i, j) for i in range(1, n - 1, 2)] for j in range(1, n - 1, 2)]
-
-    def get_alive_cells(self):
-        return sum(cell.get_state() for row in self.main_matrix for cell in row)
-
-    def save_to_dataframe(self):
-        pd.DataFrame([
-            {
-                "Iteration": self.iteration,
-                "Alive Cells": sum(cell.get_state() for row in self.main_matrix for cell in row)
-            }
-        ]).to_csv('data.csv', header=False, mode='a', index=False)

@@ -1,12 +1,8 @@
-from kivy.metrics import dp
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.utils import get_color_from_hex
 from kivy.uix.screenmanager import Screen
-
-import SpecialConfigurations
 from Automaton_Kivy import GameScreen
-from ConfigScreen import ConfigScreen
 from LogicManager import LogicManager
 from kivy.uix.slider import Slider
 from kivy.uix.label import Label
@@ -111,7 +107,7 @@ class StartWindow(BoxLayout):
     def open_config_screen(self, instance):
         if not self.screen_manager.has_screen('config'):
             from ConfigScreen import ConfigScreen
-            self.screen_manager.add_widget(ConfigScreen(name='config', screen_manager=self.screen_manager))
+            self.screen_manager.add_widget(ConfigScreen(name='config', screen_manager=self.screen_manager, wraparound=self.wrap_around_active))
 
         self.screen_manager.transition.direction = 'left'  # Always reset direction
         self.screen_manager.current = 'config'
@@ -119,7 +115,7 @@ class StartWindow(BoxLayout):
     def open_game_screen(self, instance):
         self.screen_manager.transition.direction = 'left'
 
-        logic = LogicManager(dimension=self.dimension, wraparound=self.wrap_around_button.state, config=None, probability=self.probability_slider.value)
+        logic = LogicManager(dimension=self.dimension, wraparound=self.wrap_around_active, config=None, probability=self.probability_slider.value)
         self.screen_manager.add_widget(GameScreen(dimension=self.dimension, logic=logic, name='game'))
 
         self.screen_manager.current = 'game'
